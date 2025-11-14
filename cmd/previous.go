@@ -2,9 +2,12 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+	"os/exec"
 	"time"
 
 	"github.com/andybrewer/mack"
+	"github.com/qeesung/image2ascii/convert"
 	"github.com/spf13/cobra"
 )
 
@@ -60,6 +63,23 @@ This will go back to the actual previous song and display its information.`,
 			return
 		}
 		fmt.Printf("Now Playing: %s\nBy: %s\n", info.trackName, info.artistName)
+
+		// Run the AppleScript to get the album art
+		newCmd := exec.Command("osascript", "scripts/get_album_art.scpt")
+		err = newCmd.Run()
+		if err != nil {
+			log.Fatalf("Failed to run AppleScript: %v", err)
+		}
+
+		// Convert the image to ASCII
+		convertOptions := convert.DefaultOptions
+		converter := convert.NewImageConverter()
+		convertOptions.FixedWidth = 40
+		convertOptions.FixedHeight = 20
+		asciiArt := converter.ImageFile2ASCIIString("scripts/tmp.jpg", &convertOptions)
+
+		// Print the ASCII art
+		fmt.Println(asciiArt)
 	},
 }
 
