@@ -59,7 +59,7 @@ Use `music [command] --help` for more information about a specific command.
 
 
   ```bash
-  git clone [https://github.com/ta-02/appleMusic-cli-player.git](https://github.com/ta-02/appleMusic-cli-player.git)
+  git clone [https://github.com/apoplexi24/appleMusic-cli-player.git](https://github.com/apoplexi24/appleMusic-cli-player.git)
   ```
 
 
