@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/andybrewer/mack"
 	"github.com/spf13/cobra"
@@ -18,7 +19,7 @@ current song information.
 Usage example:
 
 music previous
-This will go back to the previous song and display its information.`,
+This will go back to the actual previous song and display its information.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		isOpen, err := isMusicOpen()
 		if err != nil {
@@ -31,10 +32,22 @@ This will go back to the previous song and display its information.`,
 			return
 		}
 
+		// First, restart current song (set position to 0)
+		if _, err := mack.Tell("Music", "set player position to 0"); err != nil {
+			fmt.Println("Error setting player position:", err)
+			return
+		}
+
+		// Small delay
+		time.Sleep(100 * time.Millisecond)
+
+		// Now go to previous track
 		if _, err := mack.Tell("Music", "previous track"); err != nil {
 			fmt.Println("Error going to previous song:", err)
 			return
 		}
+
+		time.Sleep(500 * time.Millisecond)
 
 		info, err := getCurrentSongInfo()
 		if err != nil {
